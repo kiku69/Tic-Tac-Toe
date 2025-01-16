@@ -1,55 +1,68 @@
-const colDivs = Array.from(document.getElementsByClassName('cell'));
+const cellDivs = Array.from(document.getElementsByClassName('cell'));
+const messageDiv = document.getElementById('message');
 
 let nextPlayer = 0;
 let symbols = ['X', 'O'];
+let playerWon = false;
+let moveCount = 0;
 
 const winningCombinations = [
-    ['00', '01', '02'],
-    ['10', '11', '12'],
-    ['20', '21', '22'],
-    ['00', '10', '20'],
-    ['01', '11', '21'],
-    ['02', '12', '22'],
-    ['00', '11', '22'],
-    ['02', '11', '20'],
+    ['00', '01', '02'], // top row
+    ['10', '11', '12'], // middle row
+    ['20', '21', '22'], // bottom row
+    ['00', '10', '20'], // left column
+    ['01', '11', '21'], // middle column
+    ['02', '12', '22'], // right column
+    ['00', '11', '22'], // top-left to bottom-right diagonal
+    ['02', '11', '20']  // top-right to bottom-left diagonal
 ];
 
 let gameState = [[], []];
 
-colDivs.forEach(colDiv => {
+cellDivs.forEach( cellDiv => {
     
-    colDiv.addEventListener('click', e =>{
-        console.log(e.target.dataset.x, e.target.dataset.y);
+    cellDiv.addEventListener('click', e => {
 
-        if ( !e.target.innerText ) {
+        if ( !e.target.innerText && !playerWon ) {
 
-        const move = e.target.dataset.y + e.target.dataset.x;
-        gameState[nextPlayer].push(move);
+            moveCount++;
 
-        e.target.innerText = symbols[nextPlayer];
+            const move = e.target.dataset.y + e.target.dataset.x;
+            gameState[nextPlayer].push(move);
 
-        isGameOver();
+            e.target.innerText = symbols[nextPlayer];
 
-        nextPlayer = Number(!nextPlayer);
+            if ( hasPlayerWon(gameState[nextPlayer])) {
+                playerWon = true;
+                messageDiv.innerText = `${symbols[nextPlayer]} VÕITTIS MÄNGU!`;
+            }   else if (moveCount == 9 ) {
+                messageDiv.innerText = `Mäng jäi viiki`;
+            }
 
-        console.log(gameState);
+            nextPlayer = Number(!nextPlayer);
+
         }
+
     });
 
 });
 
-function isGameOver () {
+function hasPlayerWon ( moves ) {
 
-    //let cheker = (arr, target) => target.every(v => arr.includes(v));
+    let hasPlayerWon = false;
 
-//  return winningCombinations.some( combination => {
-//      (combination, moves) => combination.every(m => moves.includes(m));
-//  });
+    winningCombinations.forEach( c => {
+        if ( c.every(m => moves.includes(m)) ) {
+            hasPlayerWon = true;
+            
+            c.forEach( ([y, x]) => {
+                console.log(y, x);
+                document.querySelector(`.cell[data-y="${y}"][data-x="${x}"]`).classList.add('winning');
+            });
+
+        }
+    });
     
-    
-//    winningCombinations.forEach( c => {
-//        console.log(c, c.every(m => move.includes(m)))
-//    });
+    return hasPlayerWon;
 
-    console.log(moves, winningCombinations.some( c, moves) => c.every(m, moves.includes(m)) );
 }

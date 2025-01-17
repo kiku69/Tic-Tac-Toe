@@ -4,32 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <title>Tic-Tac-Toe</title>
 </head>
 <body>
-
-    <div class="container">
-
-        <div id ="message">x võitis mängu!</div>
-
-        <div id="game-board">
-    
+    <section class="game">
+        <div id="message" class="message"></div>
+        <div id="board">
+ 
             <div class="cell" data-y="0" data-x="0"></div>
             <div class="cell" data-y="0" data-x="1"></div>
             <div class="cell" data-y="0" data-x="2"></div>
-    
+   
             <div class="cell" data-y="1" data-x="0"></div>
             <div class="cell" data-y="1" data-x="1"></div>
             <div class="cell" data-y="1" data-x="2"></div>
-    
+   
             <div class="cell" data-y="2" data-x="0"></div>
             <div class="cell" data-y="2" data-x="1"></div>
             <div class="cell" data-y="2" data-x="2"></div>
-    
         </div>
-        
-    </div>
-
+        <button id="reset-game">Reset</button>
+    </section>
+ 
     <script src="app.js"></script>
 </body>
 </html>
+ 

@@ -1,11 +1,10 @@
 const cellDivs = Array.from(document.getElementsByClassName('cell'));
+const gameBoardDiv = document.getElementById('board')
 const messageDiv = document.getElementById('message');
-
-let nextPlayer = 0;
-let symbols = ['X', 'O'];
-let playerWon = false;
-let moveCount = 0;
-
+const resetBtn = document.getElementById('reset-game');
+ 
+const gameBoardSize = 3;
+const symbols = ['X', 'O'];
 const winningCombinations = [
     ['00', '01', '02'], // top row
     ['10', '11', '12'], // middle row
@@ -17,52 +16,85 @@ const winningCombinations = [
     ['02', '11', '20']  // top-right to bottom-left diagonal
 ];
 
-let gameState = [[], []];
 
-cellDivs.forEach( cellDiv => {
-    
-    cellDiv.addEventListener('click', e => {
-
-        if ( !e.target.innerText && !playerWon ) {
-
-            moveCount++;
-
-            const move = e.target.dataset.y + e.target.dataset.x;
-            gameState[nextPlayer].push(move);
-
-            e.target.innerText = symbols[nextPlayer];
-
-            if ( hasPlayerWon(gameState[nextPlayer])) {
-                playerWon = true;
-                messageDiv.innerText = `${symbols[nextPlayer]} VÕITTIS MÄNGU!`;
-            }   else if (moveCount == 9 ) {
-                messageDiv.innerText = `Mäng jäi viiki`;
-            }
-
-            nextPlayer = Number(!nextPlayer);
-
-        }
-
-    });
-
+ 
+let nextPlayer, playerWon, moveCount, gameState;
+ 
+ 
+initGame();
+ 
+resetBtn.addEventListener('click', e => {
+    initGame();
 });
-
+ 
+function initGame () {
+ 
+    nextPlayer = 0;
+    playerWon = false;
+    moveCount = 0;
+    gameState = [[], []];
+ 
+    initGameBoard();
+   
+}
+ 
+function initGameBoard(){
+ 
+    gameBoardDiv.innerHTML = '';
+    messageDiv.innerText = '';
+ 
+    for ( let y = 0; y < gameBoardSize; y++) {
+ 
+        for( let x = 0; x < gameBoardSize; x++) {
+ 
+            const cellDiv = document.createElement('div');
+            cellDiv.classList.add('cell')
+            cellDiv.dataset.y = y;
+            cellDiv.dataset.x = x;
+ 
+            cellDiv.addEventListener('click', e => {
+ 
+                if ( !e.target.innerText && !playerWon ) {
+ 
+                    moveCount++;
+ 
+                    const move = e.target.dataset.y + e.target.dataset.x;
+                    gameState[nextPlayer].push(move);
+ 
+                    e.target.innerText = symbols[nextPlayer];
+ 
+                    if ( hasPlayerWon(gameState[nextPlayer]) ) {
+                        playerWon = true;
+                        messageDiv.innerText = `${symbols[nextPlayer]} won the game!`;
+                    } else if ( moveCount == 9 ) {
+                        messageDiv.innerText = `The game ended in a draw!`;
+                    }
+ 
+                    nextPlayer = Number(!nextPlayer);
+                }
+            });
+ 
+            gameBoardDiv.appendChild(cellDiv);
+        }
+    }
+ 
+}
+ 
 function hasPlayerWon ( moves ) {
-
+ 
     let hasPlayerWon = false;
-
+ 
     winningCombinations.forEach( c => {
         if ( c.every(m => moves.includes(m)) ) {
             hasPlayerWon = true;
-            
+           
             c.forEach( ([y, x]) => {
-                console.log(y, x);
                 document.querySelector(`.cell[data-y="${y}"][data-x="${x}"]`).classList.add('winning');
             });
-
+ 
         }
     });
-    
+   
     return hasPlayerWon;
-
+ 
 }

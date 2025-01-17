@@ -65,9 +65,9 @@ function initGameBoard(){
  
                     if ( hasPlayerWon(gameState[nextPlayer]) ) {
                         playerWon = true;
-                        messageDiv.innerText = `${symbols[nextPlayer]} won the game!`;
+                        messageDiv.innerText = `${symbols[nextPlayer]} võitis mängu!`;
                     } else if ( moveCount == 9 ) {
-                        messageDiv.innerText = `The game ended in a draw!`;
+                        messageDiv.innerText = `Mäng jäi viiki!`;
                     }
  
                     nextPlayer = Number(!nextPlayer);
